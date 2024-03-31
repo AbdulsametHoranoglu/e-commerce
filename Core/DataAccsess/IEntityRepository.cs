@@ -1,5 +1,4 @@
-﻿using Entities.Abstract;
-using Entities.Concrete;
+﻿using Core.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,9 +6,11 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataAccsess.Abstract;
+//namespace-(İsimUzayı) = classları, interfaceleribelli bir isim uzayının içine bırakıyoruz ki onlara rahat ulaşabilelim
+//namespace DataAccsess.Abstract;
+namespace Core.DataAccsess;
 
-//generic constrain = where T : class =mesela IcategoryDal la  IEntityRepository<Category> yi implemen edince sacede category yazılsın yanlışlıkla
+//generic constraint = where T : class(İnerface) =mesela IcategoryDal la  IEntityRepository<Category> yi implemen edince sacede category yazılsın yanlışlıkla
 //string int vb yazılmasın diye ve başka classlar yazılmasın diye de IEntity  koşulunu koyduk,new()diyince(Sadece newlenebilir şeyler) de IEntity interfacesini yazamıyoruz sadece (Product Customer Category)
 public interface IEntityRepository<T> where T : class , IEntity, new()
 {

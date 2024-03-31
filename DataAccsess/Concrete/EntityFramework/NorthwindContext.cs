@@ -13,12 +13,18 @@ public class NorthwindContext : DbContext
     //bu metot senin projen hangi veri tabanı ile ilişkiyi belirteceğimiz yer
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        //burda hangi ve
+        //burda hangi veri tabanına bağlanacağımızı söyledik
         optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=master;Trusted_Connection=true");
     }
+
+
+    //sistemimizde ki hangi nesnem ver itabanında ki hangi tabloya karşılık gelecek 
     public DbSet<Product> Products { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<Customer> Customers { get; set; }
+    public DbSet<Order> Orders { get; set; }
+
+    //Enson orderi ekledik ve hoca ara verdi bende uyumaya gittim yarın allahın izni ile dewam ederiz
 
 
 }
