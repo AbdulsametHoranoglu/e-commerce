@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 namespace DataAccsess.Concrete.EntityFramework;
 
 public class EfProductDal : EfEntityRepositoryBase<Product, NorthwindContext>, IProductDal
+//burda neden IProductDal ı kullandık dersek çünkü product için başka metotlar da yazabiliriz mesela dto 
 {
     public List<ProductDetailDto> GetProductDetails()
     {
@@ -21,8 +22,13 @@ public class EfProductDal : EfEntityRepositoryBase<Product, NorthwindContext>, I
             var result = from p in context.Products
                          join c in context.Categories
                          on p.CategoryId equals c.CategoryId
-                         select new ProductDetailDto { ProductId = p.ProductId, ProductName = p.ProductName, 
-                             CategoryName = c.CategoryName, UnitsInStock =p.UnitsInStock};
+                         select new ProductDetailDto
+                         {
+                             ProductId = p.ProductId,
+                             ProductName = p.ProductName,
+                             CategoryName = c.CategoryName,
+                             UnitsInStock = p.UnitsInStock
+                         };
 
             return result.ToList();
         }
