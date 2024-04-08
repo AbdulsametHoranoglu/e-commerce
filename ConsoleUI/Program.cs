@@ -10,7 +10,7 @@ if (result.Success)
 {
     foreach (var product in result.Data)
     {
-       Console.WriteLine(product.ProductName + "/" + product.CategoryName);
+        Console.WriteLine(product.ProductName + "/" + product.CategoryName);
     }
 }
 else
@@ -22,13 +22,23 @@ else
 
 
 //IoC ile burayı da newlemeyecez
-/*
-CategoryManager categoryManager = new CategoryManager(new EfCategoryDal());
 
-foreach (var category in categoryManager.GetAll())
+//CategoryManager();
+
+static void CategoryManager()
 {
-    Console.WriteLine(category.CategoryName);
+    CategoryManager categoryManager = new CategoryManager(new EfCategoryDal());
+
+    foreach (var category in categoryManager.GetAll())
+    {
+        Console.WriteLine(category.CategoryName);
+    }
+
+    foreach (var category1 in categoryManager.GetAll())
+    {
+        Console.WriteLine(category1.CategoryName);
+    }
 }
-*/
+
 
 //DTO ne demek = bir Eticaret sistemine girince bir ürün listesinde aslında ilişkesel dataları da görüyoruz(ürünün ismide yazıyor yanında kategory ismide yazıyor)

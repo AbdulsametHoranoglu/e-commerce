@@ -39,7 +39,7 @@ public class ProductManager : IProductService
 
     public IDataResult<List<Product>> GetAll()
     {
-        if (DateTime.Now.Hour == 22)
+        if (DateTime.Now.Hour == 01)
         {
             return new ErrorDataResult<List<Product>>(Messages.MaintenanceTime);
         }
