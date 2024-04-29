@@ -20,7 +20,7 @@ public class ProductValidator : AbstractValidator<Product>
         RuleFor(p => p.UnitPrice).GreaterThan(0);// unit price 0 dan büyük olmalı
         RuleFor(p => p.UnitPrice).GreaterThanOrEqualTo(10).When(p => p.CategoryId == 1)/*.WithMessage("")*/; //bu kategorideki ürünlerin fiyatı 10 dan büyük olmak zorunda
         //fluent te olmayan bir kural ekleyelim mesela ürün isimlerm a ile başlamalı
-        RuleFor(p => p.ProductName).Must(StartWithA).WithMessage("Ürünler A harfi ile başlamalı"); //StartWithA bu benim metodum aşağıda kodladım
+        //RuleFor(p => p.ProductName).Must(StartWithA).WithMessage("Ürünler A harfi ile başlamalı"); //StartWithA bu benim metodum aşağıda kodladım
 
     }
 

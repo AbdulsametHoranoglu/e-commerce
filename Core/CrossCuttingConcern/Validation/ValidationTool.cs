@@ -10,12 +10,14 @@ using ValidationException = FluentValidation.ValidationException;
 
 namespace Core.CrossCuttingConcern.Validation;
 
+// Cross Cutting Concern = uygulamayı dikine kesen ilgi alanları örn : loglama, cache, transaction(performans yönetimi), authorization(yetkilendirme)...
+
+
 public static class ValidationTool
 {
-    public static void Validate(IValidator validator, object entity)
-    {
+    public static void Validate(IValidator validator, object entity)//IValidator validator = bana bir tane  validotor ver örn:ProductValidator
+    {                                                               //bana bir tane de  object entity = dğrulama için varlır örn: product
         var context = new ValidationContext<object>(entity);
-
         var result = validator.Validate(context);
         if (!result.IsValid)
         {

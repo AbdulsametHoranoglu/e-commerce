@@ -1,8 +1,10 @@
 ﻿using Business.Abstract;
+using Business.CCS;
 using Business.Contants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
 using Core.CrossCuttingConcern.Validation;
+using Core.Utilities.Business;
 using Core.Utilities.Results;
 using DataAccsess.Abstract;
 using DataAccsess.Concrete.InMemory;
@@ -21,10 +23,12 @@ public class ProductManager : IProductService
 {
     //dependency injection
     IProductDal _productDal;
+    ICategoryService _categoryService;
 
-    public ProductManager(IProductDal productDal)
+    public ProductManager(IProductDal productDal, ICategoryService categoryService)
     {
         _productDal = productDal;
+        _categoryService = categoryService;
     }
 
     [ValidationAspect(typeof(ProductValidator))]
@@ -48,7 +52,7 @@ public class ProductManager : IProductService
 
 
         //şimdi validationu çalıştıralım 
-        // bu altaki kötü kod onu bir tool haline getirelim 
+        // bu altaki kötü kod onu core katmanında cross cutting concern klasöründe bir tane validationTool adında bir clasörde   bir tool haline getirelim 
 
         //var context = new ValidationContext<Product>(product);
         //ProductValidator productValidator = new ProductValidator();
@@ -61,9 +65,43 @@ public class ProductManager : IProductService
 
         //ValidationTool.Validate(new ProductValidator(), product);// clasın üstüne [ValidationAspect(typeof(ProductValidator))] eklediğimiz için buna gerek yok 
 
+
+
+        //iş kurallarını böyle yazarsak istediiğin kadar katmanlı mimari kullan yine spagetti olur  peki ne yapalım = en altta CheckIfProductCountOfCategoryCorrent yadım oranın içine koydum 
+
+        //var result = _productDal.GetAll(p => p.CategoryId == product.CategoryId).Count;
+
+        //if (result >= 10)
+        //{
+        //    return new ErrorResult(Messages.ProductCountOfCategoryError);
+        //}
+
+       IResult result =  BusinessRules.Run(CheckIfProductNameExists(product.ProductName), 
+            CheckIfProductCountOfCategoryCorrent(product.CategoryId),CheckIfCategoryLimitExceded());
+
+        if (result!= null)
+        {
+            return result;
+        }
+
         _productDal.Add(product);
 
         return new SuccsessResult(Messages.ProductAdded);//Businnes.contanst deki nesneyi kullandık
+
+
+
+        //if (CheckIfProductCountOfCategoryCorrent(product.CategoryId).Success);
+        //{
+        //    if (CheckIfProductNameExists(product.ProductName).Success) 
+        //    {
+        //        _productDal.Add(product);
+
+        //        return new SuccsessResult(Messages.ProductAdded);//Businnes.contanst deki nesneyi kullandık
+        //    }
+
+        //}
+        //return new ErrorResult();
+
     }
 
     public IDataResult<List<Product>> GetAll()
@@ -94,5 +132,49 @@ public class ProductManager : IProductService
     {
         return new SuccessDataResult<List<ProductDetailDto>>( _productDal.GetProductDetails());
     }
+    [ValidationAspect(typeof(ProductValidator))]
+    public IResult Update(Product product)
+    {
+        var result = _productDal.GetAll(p => p.CategoryId == product.CategoryId).Count;
+
+        if (result >= 10)
+        {
+            return new ErrorResult(Messages.ProductCountOfCategoryError);
+        }
+        throw new NotImplementedException();
+    }
+    private IResult CheckIfProductCountOfCategoryCorrent(int categoryId)
+    {
+        var result = _productDal.GetAll(p => p.CategoryId == categoryId).Count;
+
+        if (result >= 10)
+        {
+            return new ErrorResult(Messages.ProductCountOfCategoryError);
+        }
+        return new SuccsessResult();
+    }
+
+    private IResult CheckIfProductNameExists(string productName)
+    {
+        var result = _productDal.GetAll(p=>p.ProductName == productName).Any();
+        if (result)
+        {
+            return new ErrorResult(Messages.ProductNameAlreadyExists);
+        }
+        return new SuccsessResult();
+    }
+
+    private IResult CheckIfCategoryLimitExceded()
+    {
+        var result = _categoryService.GetAll();
+        if (result.Data.Count > 15)
+        {
+            return new ErrorResult(Messages.CategoryLimitExceded);
+        }
+        return new SuccsessResult();
+
+    }
+
 
 }
+

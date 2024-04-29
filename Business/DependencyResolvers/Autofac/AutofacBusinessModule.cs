@@ -1,10 +1,12 @@
 ﻿using Autofac;
 using Autofac.Extras.DynamicProxy;
 using Business.Abstract;
+using Business.CCS;
 using Business.Concrete;
 using Castle.DynamicProxy;
 using DataAccsess.Abstract;
 using DataAccsess.Concrete.EntityFramework;
+using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +27,8 @@ public class AutofacBusinessModule :Module
         //birisi senden IProductService isterse ProductManager ı register et yani ver
         builder.RegisterType<EfProductDal>().As<IProductDal>().SingleInstance();
 
+        builder.RegisterType<CategoryManager>().As<ICategoryService>().SingleInstance(); 
+        builder.RegisterType<EfCategoryDal>().As<ICategoryDal>().SingleInstance();
 
         var assembly = System.Reflection.Assembly.GetExecutingAssembly();
 

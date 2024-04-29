@@ -2,7 +2,7 @@
 using DataAccsess.Concrete.EntityFramework;
 using DataAccsess.Concrete.InMemory;
 
-ProductManager productManager = new ProductManager(new EfProductDal());
+ProductManager productManager = new ProductManager(new EfProductDal(),new CategoryManager(new EfCategoryDal()));
 
 var result = productManager.GetProductDetails();
 
@@ -29,12 +29,12 @@ static void CategoryManager()
 {
     CategoryManager categoryManager = new CategoryManager(new EfCategoryDal());
 
-    foreach (var category in categoryManager.GetAll())
+    foreach (var category in categoryManager.GetAll().Data)
     {
         Console.WriteLine(category.CategoryName);
     }
 
-    foreach (var category1 in categoryManager.GetAll())
+    foreach (var category1 in categoryManager.GetAll().Data)
     {
         Console.WriteLine(category1.CategoryName);
     }
