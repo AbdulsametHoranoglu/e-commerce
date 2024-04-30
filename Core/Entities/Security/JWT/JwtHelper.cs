@@ -4,17 +4,12 @@ using Core.Entities.Security.Encryption;
 using Core.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Core.Entities.Security.JWT
 {
- public class JwtHelper:ITokenHelper
+    public class JwtHelper:ITokenHelper
     {
         public IConfiguration Configuration { get; }
         private TokenOptions _tokenOptions;
