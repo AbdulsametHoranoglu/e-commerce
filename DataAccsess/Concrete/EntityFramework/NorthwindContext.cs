@@ -1,4 +1,5 @@
-﻿using Entities.Concrete;
+﻿using Core.Entities.Concrete;
+using Entities.Concrete;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ namespace DataAccsess.Concrete.EntityFramework;
 // Context : Db tabloları ile proje classlarını bağlamak
 public class NorthwindContext : DbContext
 {
+
     //bu metot senin projen hangi veri tabanı ile ilişkiyi belirteceğimiz yer
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -23,6 +25,10 @@ public class NorthwindContext : DbContext
     public DbSet<Category> Categories { get; set; }
     public DbSet<Customer> Customers { get; set; }
     public DbSet<Order> Orders { get; set; }
+    public DbSet<OperationClaim> OperationClaims { get; set; }
+    public DbSet<User> Users { get; set; }
+    public DbSet<UserOperationClaim> UserOperationClaims { get; set; }
+
 
     //Enson orderi ekledik ve hoca ara verdi bende uyumaya gittim yarın allahın izni ile dewam ederiz
 

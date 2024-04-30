@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Business.BusinessAspects.Autofac;
 using Business.CCS;
 using Business.Contants;
 using Business.ValidationRules.FluentValidation;
@@ -31,7 +32,7 @@ public class ProductManager : IProductService
         _categoryService = categoryService;
     }
 
-    //[SecuredOperation("product.add")]
+    [SecuredOperation("product.add")]
     [ValidationAspect(typeof(ProductValidator))]
     public IResult Add(Product product)
     {
