@@ -88,7 +88,7 @@ public class ProductManager : IProductService
 
         _productDal.Add(product);
 
-        return new SuccsessResult(Messages.ProductAdded);//Businnes.contanst deki nesneyi kullandık
+        return new SuccessResult(Messages.ProductAdded);//Businnes.contanst deki nesneyi kullandık
 
 
 
@@ -153,7 +153,7 @@ public class ProductManager : IProductService
         {
             return new ErrorResult(Messages.ProductCountOfCategoryError);
         }
-        return new SuccsessResult();
+        return new SuccessResult();
     }
 
     private IResult CheckIfProductNameExists(string productName)
@@ -163,7 +163,7 @@ public class ProductManager : IProductService
         {
             return new ErrorResult(Messages.ProductNameAlreadyExists);
         }
-        return new SuccsessResult();
+        return new SuccessResult();
     }
 
     private IResult CheckIfCategoryLimitExceded()
@@ -173,7 +173,7 @@ public class ProductManager : IProductService
         {
             return new ErrorResult(Messages.CategoryLimitExceded);
         }
-        return new SuccsessResult();
+        return new SuccessResult();
 
     }
 

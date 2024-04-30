@@ -4,8 +4,12 @@ using Autofac.Extensions.DependencyInjection;
 using Business.Abstract;
 using Business.Concrete;
 using Business.DependencyResolvers.Autofac;
+using Core.Entities.Security.Encryption;
+using Core.Entities.Security.JWT;
 using DataAccsess.Abstract;
 using DataAccsess.Concrete.EntityFramework;
+using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.IdentityModel.Tokens;
 
@@ -23,6 +27,22 @@ builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())
 //altaki builder.Services.AddSingleton<IProductDal,EfProductDal>(); bunun yaptýðýný
 // Autofac, Ninject, CastleWindsor, StructureMap, LightInject, DryInject --> bunlar bize AOP imaný saðlar
 builder.Services.AddControllers();
+ var tokenOptions = Configuration.GetSection("TokenOptions").Get<TokenOptions>();
+
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters=new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidIssuer = tokenOptions.Issuer,
+                        ValidAudience = tokenOptions.Audience,
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = SecurityKeyHelper.CreateSecurityKey(tokenOptions.SecurityKey)
+                    };
+                });
 //autoFact yazdýðýmýz için bunlara artýk gerek yok
 
 //builder.Services.AddSingleton<IProductService, ProductManager>();// bana arka planda bir referasn oluþtur birisi senden IProductService
