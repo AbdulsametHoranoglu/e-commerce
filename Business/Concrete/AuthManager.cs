@@ -1,9 +1,9 @@
 ﻿using Business.Abstract;
 using Business.Contants;
 using Core.Entities.Concrete;
-using Core.Entities.Security.Hashing;
-using Core.Entities.Security.JWT;
 using Core.Utilities.Results;
+using Core.Utilities.Security.Hashing;
+using Core.Utilities.Security.JWT;
 using Entities.DTOs;
 
 namespace Business.Concrete
@@ -68,9 +68,5 @@ namespace Business.Concrete
             return new SuccessDataResult<AccessToken>(accessToken, "Token Oluşturuldu");
         }
 
-        IDataResult<Azure.Core.AccessToken> IAuthService.CreateAccessToken(User user)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

@@ -4,7 +4,7 @@ using Business.Abstract;
 using Business.CCS;
 using Business.Concrete;
 using Castle.DynamicProxy;
-using Core.Entities.Security.JWT;
+using Core.Utilities.Security.JWT;
 using DataAccsess.Abstract;
 using DataAccsess.Concrete.EntityFramework;
 using Microsoft.Data.SqlClient;

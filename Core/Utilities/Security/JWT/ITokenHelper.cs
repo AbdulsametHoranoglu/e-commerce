@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Entities.Security.JWT;
+namespace Core.Utilities.Security.JWT;
 
 public interface ITokenHelper
 {

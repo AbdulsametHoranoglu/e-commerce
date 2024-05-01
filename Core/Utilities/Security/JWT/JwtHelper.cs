@@ -1,15 +1,14 @@
-﻿
-using Core.Entities.Concrete;
-using Core.Entities.Security.Encryption;
+﻿using Core.Entities.Concrete;
 using Core.Extensions;
+using Core.Utilities.Security.Encryption;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
-namespace Core.Entities.Security.JWT
+namespace Core.Utilities.Security.JWT
 {
-    public class JwtHelper:ITokenHelper
+    public class JwtHelper : ITokenHelper
     {
         public IConfiguration Configuration { get; }
         private TokenOptions _tokenOptions;
@@ -22,6 +21,8 @@ namespace Core.Entities.Security.JWT
         }
         public AccessToken CreateToken(User user, List<OperationClaim> operationClaims)
         {
+            Console.WriteLine($"AccessTokenExpiration: {_tokenOptions.AccessTokenExpiration}");
+
             _accessTokenExpiration = DateTime.Now.AddMinutes(_tokenOptions.AccessTokenExpiration);
             var securityKey = SecurityKeyHelper.CreateSecurityKey(_tokenOptions.SecurityKey);
             var signingCredentials = SigningCredentialsHelper.CreatesigningCredentials(securityKey);
@@ -37,16 +38,16 @@ namespace Core.Entities.Security.JWT
 
         }
 
-        public JwtSecurityToken CreateJwtSecurityToken(TokenOptions tokenOptions, User user, 
+        public JwtSecurityToken CreateJwtSecurityToken(TokenOptions tokenOptions, User user,
             SigningCredentials signingCredentials, List<OperationClaim> operationClaims)
         {
             var jwt = new JwtSecurityToken(
-                issuer:tokenOptions.Issuer,
-                audience:tokenOptions.Audience,
-                expires:_accessTokenExpiration,
-                notBefore:DateTime.Now,
-                claims: SetClaims(user,operationClaims),
-                signingCredentials:signingCredentials
+                issuer: tokenOptions.Issuer,
+                audience: tokenOptions.Audience,
+                expires: _accessTokenExpiration,
+                notBefore: DateTime.Now,
+                claims: SetClaims(user, operationClaims),
+                signingCredentials: signingCredentials
             );
             return jwt;
         }
@@ -57,8 +58,8 @@ namespace Core.Entities.Security.JWT
             claims.AddNameIdentifier(user.Id.ToString());
             claims.AddEmail(user.Email);
             claims.AddName($"{user.FirstName} {user.LastName}");
-            claims.AddRoles(operationClaims.Select(c=>c.Name).ToArray());
-            
+            claims.AddRoles(operationClaims.Select(c => c.Name).ToArray());
+
             return claims;
         }
 

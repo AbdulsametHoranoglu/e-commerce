@@ -4,14 +4,17 @@ using Autofac.Extensions.DependencyInjection;
 using Business.Abstract;
 using Business.Concrete;
 using Business.DependencyResolvers.Autofac;
-using Core.Entities.Security.Encryption;
-using Core.Entities.Security.JWT;
+using Core.Utilities.IoC;
+using Core.Utilities.Security.Encryption;
+using Core.Utilities.Security.JWT;
 using DataAccsess.Abstract;
 using DataAccsess.Concrete.EntityFramework;
-using Microsoft.Extensions.Configuration;
+using FluentAssertions.Common;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Core.Extensions;
+using Core.DependencyResolvers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,14 +25,18 @@ builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())
         builder.RegisterModule(new AutofacBusinessModule());
     });
 
+
 // Add services to the container.
 
 //altaki builder.Services.AddSingleton<IProductDal,EfProductDal>(); bunun yaptýðýný
 // Autofac, Ninject, CastleWindsor, StructureMap, LightInject, DryInject --> bunlar bize AOP imaný saðlar
-builder.Services.AddControllers();
- var tokenOptions = Configuration.GetSection("TokenOptions").Get<TokenOptions>();
 
-            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+
+
+builder.Services.AddControllers();
+var tokenOptions = builder.Configuration.GetSection("TokenOptions").Get<TokenOptions>();
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
                     options.TokenValidationParameters=new TokenValidationParameters
@@ -43,6 +50,11 @@ builder.Services.AddControllers();
                         IssuerSigningKey = SecurityKeyHelper.CreateSecurityKey(tokenOptions.SecurityKey)
                     };
                 });
+
+            builder.Services.AddDependencyResolvers(new ICoreModule[]
+            {
+                new CoreModule()
+            });
 //autoFact yazdýðýmýz için bunlara artýk gerek yok
 
 //builder.Services.AddSingleton<IProductService, ProductManager>();// bana arka planda bir referasn oluþtur birisi senden IProductService
@@ -67,6 +79,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseAuthentication();
 
 app.MapControllers();
 
